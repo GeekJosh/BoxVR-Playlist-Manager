@@ -1,0 +1,8 @@
+﻿In order to make BoxVR Playlist Manager, the follwoing third party libraries and resources were used.
+
+Font Awesome
+Website: https://fontawesome.com
+License link: https://fontawesome.com/license
+
+Audio Tool Library (ATL) for .NET
+GitHub: https://github.com/Zeugma440/atldotnet
