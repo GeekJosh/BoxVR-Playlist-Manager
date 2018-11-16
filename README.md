@@ -5,7 +5,7 @@ A Windows based playlist manager for the VR fitness game BoxVR
 
 ## Features
 - Add, remove and rearrange the tracks in your BoxVR playlists
-- Create new or deletew existing playlists
+- Create new or delete existing playlists
 - Generate (most of) the beat maps automatically on save, resulting in much shorter loading times the first time you use a playlist in the games
 - Import playlists in many popular formats
 
