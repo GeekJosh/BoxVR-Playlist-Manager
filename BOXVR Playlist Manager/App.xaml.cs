@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Configuration;
 using System.Data;
 using System.Diagnostics;
@@ -20,6 +21,7 @@ namespace BoxVR_Playlist_Manager
     {
         const string DEFAULT_BOXVR_APPDATA = @"%userprofile%\AppData\LocalLow\FITXR\BOXVR";
         const string REGISTRY_UNINSTALL_KEY = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+        const string REGISTRY_OCULUS_LIB_KEY = @"Software\Oculus VR, LLC\Oculus\Libraries";
         const string REGISTRY_STEAM_KEY = @"HKEY_CURRENT_USER\Software\Valve\Steam";
 
 
@@ -76,15 +78,73 @@ namespace BoxVR_Playlist_Manager
                 {
                     using (var subkey = key.OpenSubKey(subkey_name))
                     {
-                        logger.Trace($"Checking reg key {REGISTRY_UNINSTALL_KEY}\\{subkey_name}");
+                        logger.Trace($"Checking reg key HKLM\\{REGISTRY_UNINSTALL_KEY}\\{subkey_name}");
                         if (string.Equals(subkey.GetValue("DisplayName")?.ToString(), "BOXVR", StringComparison.OrdinalIgnoreCase))
                         {
                             var location = subkey.GetValue("InstallLocation")?.ToString();
                             if(location != null)
                             {
-                                logger.Debug($"BoxVR location found in reg key {REGISTRY_UNINSTALL_KEY}\\{subkey_name}: {location}");
+                                logger.Debug($"BoxVR location found in reg key HKLM\\{REGISTRY_UNINSTALL_KEY}\\{subkey_name}: {location}");
                                 return location;
                             }
+                        }
+                    }
+                }
+            }
+
+            logger.Debug("Searching registry for Oculus library location");
+            using (var key = Registry.CurrentUser.OpenSubKey(REGISTRY_OCULUS_LIB_KEY))
+            {
+                if (key == null)
+                {
+                    logger.Trace($"Couldn't locate Oculus registry key: {REGISTRY_OCULUS_LIB_KEY}");
+                }
+                else
+                {
+                    var mountPoints = new List<string>();
+                    foreach(var subkey_name in key.GetSubKeyNames())
+                    {
+                        using(var subkey = key.OpenSubKey(subkey_name))
+                        {
+                            logger.Trace($"Checking reg key HKCU\\{REGISTRY_OCULUS_LIB_KEY}\\{subkey_name}");
+                            var libPath = subkey.GetValue("Path")?.ToString();
+                            if(libPath == null)
+                            {
+                                logger.Trace($"No 'Path' value found, moving on");
+                            }
+                            else
+                            {
+                                logger.Trace($"Path found: {libPath}, searching for 'fitxr-boxvr'");
+                                var volumeIdMatch = Regex.Match(libPath, @"(\\\\\?\\Volume{.*?}\\)(.*)");
+                                if (volumeIdMatch.Success)
+                                {
+                                    logger.Trace($"Getting mount points for volume {volumeIdMatch.Groups[1].Value}");
+                                    try
+                                    {
+                                        var _mountPoints = SafeNativeMethods.GetMountPointsForVolume(volumeIdMatch.Groups[1].Value);
+                                        logger.Trace($"Found the following mountpoints for {volumeIdMatch.Groups[1].Value}:\r\n{string.Join("\r\n", _mountPoints)}");
+                                        mountPoints.AddRange(_mountPoints.Select(m => Path.Combine(m, volumeIdMatch.Groups[2].Value)));
+                                    }
+                                    catch (Win32Exception ex)
+                                    {
+                                        logger.Error(ex);
+                                    }
+                                }
+                                else
+                                {
+                                    logger.Trace("Failed to find volume GUID path");
+                                }
+                            }
+                        }
+                    }
+
+                    foreach(var mountPoint in mountPoints)
+                    {
+                        var location = Path.Combine(mountPoint, "Software", "fitxr-boxvr");
+                        if (File.Exists(Path.Combine(location, "BoxVR.exe")))
+                        {
+                            logger.Debug($"BoxVR located in Oculus library: {location}");
+                            return location;
                         }
                     }
                 }

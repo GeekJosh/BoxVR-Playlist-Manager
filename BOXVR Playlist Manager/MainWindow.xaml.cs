@@ -33,7 +33,6 @@ namespace BoxVR_Playlist_Manager
             {
                 _selectedPlaylist = value;
                 playlistView.DataContext = SelectedPlaylist;
-                playlistView.UpdateLayout();
                 gridGeneratingBeatmaps.DataContext = SelectedPlaylist;
             }
         }
