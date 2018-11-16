@@ -1,4 +1,4 @@
-# BoxVR-Playlist-Manager
+# BoxVR Playlist Manager
 A Windows based playlist manager for the VR fitness game BoxVR
 
 ![image](https://user-images.githubusercontent.com/1590066/48589823-12a2d580-e935-11e8-8f90-dc5db9290b9f.png)
