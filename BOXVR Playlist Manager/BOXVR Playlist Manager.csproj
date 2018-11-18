@@ -37,6 +37,16 @@
   <PropertyGroup>
     <StartupObject>BoxVR_Playlist_Manager.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Publish|AnyCPU'">
+    <OutputPath>bin\Publish\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>none</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ATL, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\z440.atl.core.2.5.0\lib\net30\ATL.dll</HintPath>
