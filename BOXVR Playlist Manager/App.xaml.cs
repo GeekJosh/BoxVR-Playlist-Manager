@@ -140,7 +140,7 @@ namespace BoxVR_Playlist_Manager
 
                     foreach(var mountPoint in mountPoints)
                     {
-                        var location = Path.Combine(mountPoint, "Software", "fitxr-boxvr");
+                        var location = Path.Combine(mountPoint, "Software", "fitxr-boxvr\\BoxVR_Oculus");
                         if (File.Exists(Path.Combine(location, "BoxVR.exe")))
                         {
                             logger.Debug($"BoxVR located in Oculus library: {location}");
