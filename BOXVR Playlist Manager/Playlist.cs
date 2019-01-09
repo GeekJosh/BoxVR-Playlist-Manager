@@ -283,6 +283,14 @@ namespace BoxVR_Playlist_Manager
                 Title = Path.GetFileNameWithoutExtension(filename),
             };
 
+            var _dupCount = 0;
+            var _title = playlist.Title;
+            while (File.Exists(Path.Combine(playlist.SavePath, playlist.Title + ".playlist.txt")))
+            {
+                _dupCount++;
+                playlist.Title = $"{_title} ({_dupCount})";
+            }
+
             var reader = PlaylistReaderFactory.GetInstance().GetPlaylistReader(filename);
             foreach (var track in reader.GetFiles())
                 playlist.Tracks.Add(new Track(track));
