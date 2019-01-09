@@ -51,7 +51,7 @@ namespace BoxVR_Playlist_Manager
             App.logger.Trace("MainWindow initialized");
 
             LoadPlaylists();
-            icPlaylists.ItemsSource = Playlists;
+            icPlaylists.ItemsSource = icCtxCopyTo.ItemsSource = icCtxMoveTo.ItemsSource = Playlists;
         }
 
         private void playlistTracks_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -138,7 +138,8 @@ namespace BoxVR_Playlist_Manager
 
         private void playlistItem_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedPlaylist != null && SelectedPlaylist.IsModified)
+            var newPlaylist = ((Button)sender).Tag as Playlist;
+            if (SelectedPlaylist != null && newPlaylist != null && SelectedPlaylist != newPlaylist && SelectedPlaylist.IsModified)
             {
                 var result = MessageBox.Show("Do you want to save your changes?", "Save Changes", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.Yes);
                 if(result == MessageBoxResult.Yes)
@@ -162,6 +163,22 @@ namespace BoxVR_Playlist_Manager
         {
             if (SelectedPlaylist.SelectedTrack != null)
                 SelectedPlaylist.Tracks.Remove(SelectedPlaylist.SelectedTrack);
+        }
+
+        private void ctx_MoveTo_Click(object sender, RoutedEventArgs e)
+        {
+            if (((MenuItem)sender).Tag is Playlist moveToPlaylist && SelectedPlaylist.SelectedTrack != null)
+            {
+                moveToPlaylist.Tracks.Add(SelectedPlaylist.SelectedTrack);
+                SelectedPlaylist.Tracks.Remove(SelectedPlaylist.SelectedTrack);
+            }
+
+        }
+
+        private void ctx_CopyTo_Click(object sender, RoutedEventArgs e)
+        {
+            if (((MenuItem)sender).Tag is Playlist copyToPlaylist && SelectedPlaylist.SelectedTrack != null)
+                copyToPlaylist.Tracks.Add(SelectedPlaylist.SelectedTrack);
         }
 
         private void ctx_Explorer_Click(object sender, RoutedEventArgs e)
@@ -320,6 +337,12 @@ namespace BoxVR_Playlist_Manager
                     SelectedPlaylist = null;
                 }
             }
+        }
+
+        private void PlaylistTracks_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (SelectedPlaylist != null && SelectedPlaylist.SelectedTrack != null)
+                SelectedPlaylist.Tracks.Remove(SelectedPlaylist.SelectedTrack);
         }
     }
 }

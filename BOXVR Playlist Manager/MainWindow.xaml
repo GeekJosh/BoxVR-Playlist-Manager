@@ -25,7 +25,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        
+
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
         <local:IsEnabledColorConverter x:Key="IsEnabledColorConverter" />
         <Geometry x:Key="fas_fa-cog">M444.788 291.1l42.616 24.599c4.867 2.809 7.126 8.618 5.459 13.985-11.07 35.642-29.97 67.842-54.689 94.586a12.016 12.016 0 0 1-14.832 2.254l-42.584-24.595a191.577 191.577 0 0 1-60.759 35.13v49.182a12.01 12.01 0 0 1-9.377 11.718c-34.956 7.85-72.499 8.256-109.219.007-5.49-1.233-9.403-6.096-9.403-11.723v-49.184a191.555 191.555 0 0 1-60.759-35.13l-42.584 24.595a12.016 12.016 0 0 1-14.832-2.254c-24.718-26.744-43.619-58.944-54.689-94.586-1.667-5.366.592-11.175 5.459-13.985L67.212 291.1a193.48 193.48 0 0 1 0-70.199l-42.616-24.599c-4.867-2.809-7.126-8.618-5.459-13.985 11.07-35.642 29.97-67.842 54.689-94.586a12.016 12.016 0 0 1 14.832-2.254l42.584 24.595a191.577 191.577 0 0 1 60.759-35.13V25.759a12.01 12.01 0 0 1 9.377-11.718c34.956-7.85 72.499-8.256 109.219-.007 5.49 1.233 9.403 6.096 9.403 11.723v49.184a191.555 191.555 0 0 1 60.759 35.13l42.584-24.595a12.016 12.016 0 0 1 14.832 2.254c24.718 26.744 43.619 58.944 54.689 94.586 1.667 5.366-.592 11.175-5.459 13.985L444.788 220.9a193.485 193.485 0 0 1 0 70.2zM336 256c0-44.112-35.888-80-80-80s-80 35.888-80 80 35.888 80 80 80 80-35.888 80-80z</Geometry>
@@ -37,74 +37,76 @@
         <Geometry x:Key="fas_fa-trash-alt">M0 84V56c0-13.3 10.7-24 24-24h112l9.4-18.7c4-8.2 12.3-13.3 21.4-13.3h114.3c9.1 0 17.4 5.1 21.5 13.3L312 32h112c13.3 0 24 10.7 24 24v28c0 6.6-5.4 12-12 12H12C5.4 96 0 90.6 0 84zm416 56v324c0 26.5-21.5 48-48 48H80c-26.5 0-48-21.5-48-48V140c0-6.6 5.4-12 12-12h360c6.6 0 12 5.4 12 12zm-272 68c0-8.8-7.2-16-16-16s-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208zm96 0c0-8.8-7.2-16-16-16s-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208zm96 0c0-8.8-7.2-16-16-16s-16 7.2-16 16v224c0 8.8 7.2 16 16 16s16-7.2 16-16V208z</Geometry>
     </Window.Resources>
     <Grid>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*" />
-            <ColumnDefinition Width="5" />
-            <ColumnDefinition Width="7*" />
-        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3*" />
+                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="7*" />
+            </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0" Background="#353b48" >
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+            <Grid Grid.Column="0" Background="#353b48" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" Background="#FF2F3640">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
-
-                <TextBlock Grid.Column="0" FontSize="24" Foreground="#FFF5F6FA" Margin="4">Playlists</TextBlock>
-                <Grid Grid.Column="1">
+                <Grid Grid.Row="0" Background="#FF2F3640">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <Button x:Name="btnImportPlaylist" Grid.Column="0" Background="Transparent" BorderBrush="{x:Null}" ToolTip="Import Playlist" Margin="4,0" Click="btnImportPlaylist_Click">
-                        <Grid>
-                            <Path Data="{StaticResource fas_fa-file-import}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#c23616"/>
-                        </Grid>
-                    </Button>
-                    <Button x:Name="btnAddPlaylist" Grid.Column="1" Background="Transparent" BorderBrush="{x:Null}" ToolTip="New Playlist" Margin="4,0" Click="btnAddPlaylist_Click">
-                        <Grid>
-                            <Path Data="{StaticResource fas_fa-plus}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#4cd137"/>
-                        </Grid>
-                    </Button>
+
+                    <TextBlock Grid.Column="0" FontSize="24" Foreground="#FFF5F6FA" Margin="4">Playlists</TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="btnImportPlaylist" Grid.Column="0" Background="Transparent" BorderBrush="{x:Null}" ToolTip="Import Playlist" Margin="4,0" Click="btnImportPlaylist_Click">
+                            <Grid>
+                                <Path Data="{StaticResource fas_fa-file-import}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#c23616"/>
+                            </Grid>
+                        </Button>
+                        <Button x:Name="btnAddPlaylist" Grid.Column="1" Background="Transparent" BorderBrush="{x:Null}" ToolTip="New Playlist" Margin="4,0" Click="btnAddPlaylist_Click">
+                            <Grid>
+                                <Path Data="{StaticResource fas_fa-plus}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#4cd137"/>
+                            </Grid>
+                        </Button>
+                    </Grid>
+
                 </Grid>
-                
-            </Grid>
-            
-            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                <ItemsControl Name="icPlaylists">
-                    <ItemsControl.ItemTemplate>
-                        <DataTemplate>
-                            <Button Click="playlistItem_Click" Tag="{Binding}" Foreground="White" HorizontalContentAlignment="Stretch" 
+
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                    <ItemsControl Name="icPlaylists">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Click="playlistItem_Click" Tag="{Binding}" Foreground="White" HorizontalContentAlignment="Stretch" 
                                     BorderBrush="#FF707070" FontSize="14" >
-                                <Grid Margin="4,2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Grid.Column="0" Text="{Binding Title}"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding Duration,StringFormat={}{0:mm':'ss}}" />
-                                </Grid>
-                            </Button>
-                        </DataTemplate>
-                    </ItemsControl.ItemTemplate>
-                </ItemsControl>
-            </ScrollViewer>
+                                    <Grid Margin="4,2">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="auto" />
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Title}"/>
+                                        <TextBlock Grid.Column="1" Text=" *" Visibility="{Binding IsModified, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Hidden}" />
+                                        <TextBlock Grid.Column="2" Text="{Binding Duration,StringFormat={}{0:mm':'ss}}" />
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
 
-            <Button Grid.Row="2" Background="Transparent" BorderBrush="{x:Null}" Click="settingsButton_Click" ToolTip="Settings" HorizontalAlignment="Left" Margin="4">
-                <Grid>
-                    <Path Data="{StaticResource fas_fa-cog}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#718093"/>
-                </Grid>
-            </Button>
-        </Grid>
+                <Button Grid.Row="2" Background="Transparent" BorderBrush="{x:Null}" Click="settingsButton_Click" ToolTip="Settings" HorizontalAlignment="Left" Margin="4">
+                    <Grid>
+                        <Path Data="{StaticResource fas_fa-cog}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#718093"/>
+                    </Grid>
+                </Button>
+            </Grid>
 
-        <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" />
 
             <Grid Grid.Column="2" Background="#f5f6fa" Name="playlistView">
                 <Grid Margin="0,5,5,5">
@@ -138,7 +140,7 @@
                     </Grid>
 
                     <DataGrid Grid.Row="1" Name="playlistTracks" ItemsSource="{Binding Tracks}" AllowDrop="True" SelectionMode="Extended"
-                          FontSize="14" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedTrack}" Sorting="playlistTracks_Sorting">
+                          FontSize="14" AutoGenerateColumns="False" IsReadOnly="True" SelectedItem="{Binding SelectedTrack}" Sorting="playlistTracks_Sorting" KeyUp="PlaylistTracks_KeyUp">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Title" Binding="{Binding Title}" />
                             <DataGridTextColumn Header="Artist" Binding="{Binding Artist}"  />
@@ -147,6 +149,24 @@
                         </DataGrid.Columns>
                         <DataGrid.ContextMenu>
                             <ContextMenu>
+                                <MenuItem Header="Copy To">
+                                    <ItemsControl Name="icCtxCopyTo">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <MenuItem Header="{Binding Title}" Click="ctx_CopyTo_Click" Tag="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </MenuItem>
+                                <MenuItem Header="Move To">
+                                    <ItemsControl Name="icCtxMoveTo">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <MenuItem Header="{Binding Title}" Click="ctx_MoveTo_Click" Tag="{Binding}" />
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </MenuItem>
                                 <MenuItem Header="Remove" Click="ctx_Remove_Click" />
                                 <MenuItem Header="Show in Explorer" Click="ctx_Explorer_Click" />
                             </ContextMenu>
