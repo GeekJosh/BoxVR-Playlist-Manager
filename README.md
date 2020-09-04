@@ -1,3 +1,5 @@
+# Note: due to updates to BoxVR/FitXR, this app no longer works. I'm hoping to find a new approach but for now I'm afraid this app will not work for you.
+
 # BoxVR Playlist Manager
 A Windows based playlist manager for the VR fitness game BoxVR
 
