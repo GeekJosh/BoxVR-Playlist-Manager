@@ -2,13 +2,15 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using BoxVR_Playlist_Manager.FitXr.Enums;
-using BoxVR_Playlist_Manager.Helpers;
+using BoxVRPlaylistManagerNETCore.FitXr.Enums;
+using BoxVRPlaylistManagerNETCore.Helpers;
+using log4net;
 
-namespace BoxVR_Playlist_Manager.FitXr.BeatStructure
+namespace BoxVRPlaylistManagerNETCore.FitXr.BeatStructure
 {
     public class FFmpegQueue
     {
+        private ILog _log = LogManager.GetLogger(typeof(FFmpegQueue));
         public static FFmpegQueue instance = instance == null ? new FFmpegQueue() : instance;
 
         public void Queue(FFmpegJob job) => RunFFMPEG(job);
@@ -18,9 +20,8 @@ namespace BoxVR_Playlist_Manager.FitXr.BeatStructure
         private void RunFFMPEG(FFmpegJob job)
         {
             Directory.CreateDirectory(Paths.TrackDataFolder(LocationMode.PlayerData));
-            App.logger.Debug(("FFMPEG start: " + FFmpegQueue.binaryPath + " " + job.GetCommand()));
-            CancellationTokenSource doneCts = new CancellationTokenSource();
-            var done = doneCts.Token;
+            _log.Debug(("FFMPEG start: " + FFmpegQueue.binaryPath + " " + job.GetCommand()));
+            bool done = false;
             string exepath = FFmpegQueue.binaryPath;
             string command = job.GetCommand();
             new Thread((ThreadStart)(() =>
@@ -39,11 +40,11 @@ namespace BoxVR_Playlist_Manager.FitXr.BeatStructure
                 process.WaitForExit();
                 process.Close();
                 job._message = output;
-                doneCts.Cancel();
+                done = true;
             })).Start();
-            while(!done.IsCancellationRequested) { }
+            while(!done) { }
             job._onFinished.Invoke(job);
-            App.logger.Debug("FFMEG done");
+            _log.Debug("FFMEG done");
         }
 
         public bool ExtractDurationFromFFmpegOutput(string output, out int minutes, out int seconds)

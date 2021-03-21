@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Windows.Threading;
 
-namespace BoxVR_Playlist_Manager.Helpers
+namespace BoxVRPlaylistManagerNETCore.UI
 {
     public class NotifyingObject : INotifyPropertyChanged
     {
