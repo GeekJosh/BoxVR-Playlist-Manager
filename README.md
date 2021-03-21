@@ -1,4 +1,4 @@
-# Note: due to updates to BoxVR/FitXR, this app no longer works. I'm hoping to find a new approach but for now I'm afraid this app will not work for you.
+# Updated to work with latest BoxVR as of 20th March 2021
 
 # BoxVR Playlist Manager
 A Windows based playlist manager for the VR fitness game BoxVR
@@ -9,7 +9,6 @@ A Windows based playlist manager for the VR fitness game BoxVR
 - Add, remove and rearrange the tracks in your BoxVR playlists
 - Create new or delete existing playlists
 - Generate (most of) the beat maps automatically on save, resulting in much shorter loading times the first time you use a playlist in the games
-- Import playlists in many popular formats
 
 [Download the latest release](https://github.com/GeekJosh/BoxVR-Playlist-Manager/releases/latest)
 
