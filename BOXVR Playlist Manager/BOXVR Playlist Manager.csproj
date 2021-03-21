@@ -8,12 +8,13 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>BoxVR_Playlist_Manager</RootNamespace>
     <AssemblyName>BoxVR Playlist Manager</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,6 +52,9 @@
     <Reference Include="ATL, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\z440.atl.core.2.5.0\lib\net30\ATL.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.5.10\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -72,20 +76,78 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity3D.UnityEngine.2018.3.5.1\lib\UnityEngine.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
+    <Compile Include="FitXr\BeatStructure\Bar.cs" />
+    <Compile Include="FitXr\BeatStructure\BarList.cs" />
+    <Compile Include="FitXr\BeatStructure\Beat.cs" />
+    <Compile Include="FitXr\BeatStructure\BeatInfo.cs" />
+    <Compile Include="FitXr\BeatStructure\BeatList.cs" />
+    <Compile Include="FitXr\BeatStructure\BeatStructureBase.cs" />
+    <Compile Include="FitXr\BeatStructure\BeatStructureMadmom.cs" />
+    <Compile Include="FitXr\BeatStructure\FFmpegJob.cs" />
+    <Compile Include="FitXr\BeatStructure\FFmpegJobConvert.cs" />
+    <Compile Include="FitXr\BeatStructure\FFmpegQueue.cs" />
+    <Compile Include="FitXr\BeatStructure\MadmomProcess.cs" />
+    <Compile Include="FitXr\BeatStructure\PlaylistManager.cs" />
+    <Compile Include="FitXr\BeatStructure\SegmentList.cs" />
+    <Compile Include="FitXr\BeatStructure\SongParser.cs" />
+    <Compile Include="FitXr\BeatStructure\TrackDataManager.cs" />
+    <Compile Include="FitXr\BeatStructure\UserSongClip.cs" />
+    <Compile Include="FitXr\BeatStructure\VampProcess.cs" />
+    <Compile Include="FitXr\Enums\TrackGenre.cs" />
+    <Compile Include="FitXr\Enums\WorkoutType.cs" />
+    <Compile Include="FitXr\Models\MusicActionSerializable.cs" />
+    <Compile Include="FitXr\Models\WorkoutId.cs" />
+    <Compile Include="FitXr\MusicActionListSerializer.cs" />
+    <Compile Include="FitXr\MusicActions\MessagePosition.cs" />
+    <Compile Include="FitXr\MusicActions\MoveAction.cs" />
+    <Compile Include="FitXr\MusicActions\MoveChannel.cs" />
+    <Compile Include="FitXr\MusicActions\MoveType.cs" />
+    <Compile Include="FitXr\MusicActions\MusicAction.cs" />
+    <Compile Include="FitXr\MusicActions\MusicActionAudio.cs" />
+    <Compile Include="FitXr\MusicActions\MusicActionBPM.cs" />
+    <Compile Include="FitXr\MusicActions\MusicActionMessage.cs" />
+    <Compile Include="FitXr\MusicActions\MusicActionMoveCue.cs" />
+    <Compile Include="FitXr\MusicActions\MusicActionType.cs" />
+    <Compile Include="FitXr\Tools\Format.cs" />
+    <Compile Include="FitXr\BeatStructure\Segment.cs" />
+    <Compile Include="FitXr\Enums\AudioClipStatus.cs" />
+    <Compile Include="FitXr\Enums\Game.cs" />
+    <Compile Include="FitXr\Enums\LocationMode.cs" />
+    <Compile Include="FitXr\Enums\TrackDataState.cs" />
+    <Compile Include="FitXr\ReadOnlyDictionary.cs" />
+    <Compile Include="FitXr\Tools\IO.cs" />
+    <Compile Include="FitXr\Utility\MD5.cs" />
+    <Compile Include="FitXr\Utility\ShuffleList.cs" />
+    <Compile Include="FitXr\WorkoutDefinitionManager.cs" />
+    <Compile Include="Helpers\NotifyingObject.cs" />
+    <Compile Include="Helpers\Paths.cs" />
+    <Compile Include="FitXr\Models\SerialisedActionList.cs" />
+    <Compile Include="FitXr\Models\TrackBase.cs" />
+    <Compile Include="FitXr\Models\TrackData.cs" />
+    <Compile Include="FitXr\Models\TrackDefinition.cs" />
+    <Compile Include="FitXr\Models\TrackId.cs" />
+    <Compile Include="FitXr\Models\WorkoutInfo.cs" />
+    <Compile Include="FitXr\Models\WorkoutPlaylist.cs" />
+    <Compile Include="FitXr\Models\SongDefinition.cs" />
     <Compile Include="IsEnabledColorConverter.cs" />
-    <Compile Include="Track.cs" />
+    <Compile Include="MainWindowViewModel.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="SongViewModel.cs" />
     <Compile Include="SafeNativeMethods.cs" />
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="Playlist.cs" />
+    <Compile Include="PlaylistViewModel.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>
@@ -131,9 +193,6 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="beatmap.bat">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -41,7 +41,6 @@ namespace BoxVR_Playlist_Manager
             if (lpcchReturnLength == 0)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
-                return result;
             }
 
             buffer = new string(new char[lpcchReturnLength]);
