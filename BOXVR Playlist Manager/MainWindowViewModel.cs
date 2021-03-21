@@ -1,5 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -23,20 +27,24 @@ namespace BoxVR_Playlist_Manager
             set => SetProperty(ref _selectedPlaylist, value);
         }
 
-        public ICommand AddPlaylistCommand { get; set; }
+        public ICommand AddLocalPlaylistCommand { get; set; }
         public ICommand SettingsCommand { get; set; }
         public ICommand RemovePlaylistCommand { get; set; }
 
         private bool _pathsNotSetup;
         public bool PathsNotSetup { get => _pathsNotSetup; set => SetProperty(ref _pathsNotSetup, value); }
+
+        private bool _displayAddPlaylistSubmenu;
+        public bool DisplayAddPlayListSubmenu { get => _displayAddPlaylistSubmenu; set => SetProperty(ref _displayAddPlaylistSubmenu, value); }
         
 
         public MainWindowViewModel(Dispatcher dispatcher):base(dispatcher)
         {
             _dispatcher = dispatcher;
-            AddPlaylistCommand = new RelayCommand(NewPlaylistCommandExecute);
+            AddLocalPlaylistCommand = new RelayCommand(NewLocalPlaylistCommandExecute);
             RemovePlaylistCommand = new RelayCommand(RemovePlaylistCommandExecute);
             SettingsCommand = new RelayCommand(SettingsCommandExecute);
+            Playlists = new ObservableCollection<PlaylistViewModel>();
             if(string.IsNullOrEmpty(Paths.PersistentDataPath) || string.IsNullOrEmpty(Paths.ApplicationPath))
             {
                 PathsNotSetup = true;
@@ -47,12 +55,13 @@ namespace BoxVR_Playlist_Manager
 
         private void LoadPlaylists()
         {
-            Playlists = new ObservableCollection<PlaylistViewModel>();
+            
             PlaylistManager.instance.LoadWorkoutPlaylists();
             var playlists = PlaylistManager.instance.GetAllWorkoutPlaylists();
 
             _dispatcher.Invoke(() =>
             {
+                Playlists.Clear();
                 foreach(var playlist in playlists)
                 {
                     Playlists.Add(new PlaylistViewModel(playlist, _dispatcher));
@@ -63,8 +72,9 @@ namespace BoxVR_Playlist_Manager
             _log.Debug($"{Playlists.Count} playlists loaded from");
         }
 
-        public void NewPlaylistCommandExecute(object arg)
+        public void NewLocalPlaylistCommandExecute(object arg)
         {
+            DisplayAddPlayListSubmenu = false;
             var workoutPlaylist = PlaylistManager.instance.AddNewPlaylist();
             Playlists.Add(new PlaylistViewModel(workoutPlaylist, _dispatcher));
         }
@@ -91,15 +101,7 @@ namespace BoxVR_Playlist_Manager
                 return;
             }
             PathsNotSetup = false;
-            if(settingsChanged.HasValue && settingsChanged.Value)
-            {
-                _log.Debug("Settings were changed");
-                LoadPlaylists();
-            }
-            else
-            {
-                _log.Debug("No settings changed");
-            }
+            Task.Run(LoadPlaylists);
         }
     }
 }

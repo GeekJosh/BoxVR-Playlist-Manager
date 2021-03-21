@@ -1,0 +1,60 @@
+﻿<Window x:Class="BoxVRPlaylistManagerNETCore.UI.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoxVRPlaylistManagerNETCore.UI"
+        mc:Ignorable="d"
+        Title="Settings" Height="148.624" Width="600">
+    <Window.Resources>
+        <Geometry x:Key="fas_fa-folder-open">M572.694 292.093L500.27 416.248A63.997 63.997 0 0 1 444.989 448H45.025c-18.523 0-30.064-20.093-20.731-36.093l72.424-124.155A64 64 0 0 1 152 256h399.964c18.523 0 30.064 20.093 20.73 36.093zM152 224h328v-48c0-26.51-21.49-48-48-48H272l-64-64H48C21.49 64 0 85.49 0 112v278.046l69.077-118.418C86.214 242.25 117.989 224 152 224z</Geometry>
+        
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+    </Window.Resources>
+    <Grid d:DataContext="{d:DesignInstance local:SettingsWindowViewModel}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Label Grid.Row="0" Grid.Column="0">BoxVR Executable Path</Label>
+        <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding BoxVRExePath, UpdateSourceTrigger=LostFocus}" />
+        <Button x:Name="btnBrowseExe" Grid.Row="0" Grid.Column="2" Command="{Binding BrowseExeCommand}" Margin="5, 0, 0,0 ">
+            <Grid>
+                <Path Data="{StaticResource fas_fa-folder-open}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#FFE1B12C"/>
+            </Grid>
+        </Button>
+
+        <Label Grid.Row="1" Grid.Column="0">BoxVR AppData Path</Label>
+        <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding BoxVRAppDataPath, UpdateSourceTrigger=LostFocus}" />
+        <Button Grid.Row="1" Grid.Column="2" x:Name="btnBrowseAppData" Command="{Binding BrowseAppDataCommand}"  Margin="5, 0, 0,0 ">
+            <Grid>
+                <Path Data="{StaticResource fas_fa-folder-open}" Stretch="Uniform" Width="20" Height="20" RenderTransformOrigin="0.5,0.5" Fill="#FFE1B12C"/>
+            </Grid>
+        </Button>
+
+        <Button Grid.Row ="3" Grid.Column="0" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" Command="{Binding DonateCommand}" Height="22" HorizontalAlignment="Left">
+            <!--<Image Source="Resources/btn_donate_LG.gif" />-->
+        </Button>
+
+        <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" HorizontalAlignment="Right" Orientation="Horizontal" Margin="5, 5, 5, 5">
+            <Button IsCancel="True" Command="{Binding CancelCommand}" Width="50">Cancel</Button>
+            <Button IsDefault="True" Command="{Binding OkCommand}" Width="50" FontWeight="Bold" Margin="5, 0, 0, 0">OK</Button>
+        </StackPanel>
+    </Grid>
+</Window>

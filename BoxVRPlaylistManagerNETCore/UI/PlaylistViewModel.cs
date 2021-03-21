@@ -1,15 +1,15 @@
-﻿using BoxVR_Playlist_Manager.FitXr.BeatStructure;
-using BoxVR_Playlist_Manager.FitXr.Models;
-using BoxVR_Playlist_Manager.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using BoxVRPlaylistManagerNETCore.FitXr.BeatStructure;
+using BoxVRPlaylistManagerNETCore.FitXr.Models;
+using BoxVRPlaylistManagerNETCore.UI.Enums;
+using Microsoft.Win32;
 
-namespace BoxVR_Playlist_Manager
+namespace BoxVRPlaylistManagerNETCore.UI
 {
     public class PlaylistViewModel : NotifyingObject
     {
@@ -17,7 +17,7 @@ namespace BoxVR_Playlist_Manager
 
         public WorkoutPlaylist _originalWorkoutPlaylist;
 
-        public ObservableCollection<SongDefinition> Tracks { get; private set; }
+        public ObservableCollection<SongViewModel> Tracks { get; private set; }
 
         private string _title;
 
@@ -70,18 +70,12 @@ namespace BoxVR_Playlist_Manager
             private set => SetProperty(ref _isGeneratingBeatmaps, value);
         }
 
-        private SongDefinition _selectedTrack;
-        public SongDefinition SelectedTrack
+        private SongViewModel _selectedTrack;
+        public SongViewModel SelectedTrack
         {
             get => _selectedTrack;
             set => SetProperty(ref _selectedTrack, value);
         }
-
-        private string _processingTrackName;
-        public string ProcessingTrackName { get => _processingTrackName; set => SetProperty(ref _processingTrackName, value); }
-
-        private int _processingTrackNum;
-        public int ProcessingTrackNum { get => _processingTrackNum; set => SetProperty(ref _processingTrackNum, value); }
 
 
         // ------------------ Commands ---------------------
@@ -104,7 +98,11 @@ namespace BoxVR_Playlist_Manager
             _originalWorkoutPlaylist = workoutPlaylist;
             _workoutPlaylist = new WorkoutPlaylist(workoutPlaylist);
             Title = workoutPlaylist.definition.workoutName;
-            Tracks = new ObservableCollection<SongDefinition>(workoutPlaylist.songs);
+            Tracks = new ObservableCollection<SongViewModel>();
+            foreach(var song in workoutPlaylist.songs)
+            {
+                Tracks.Add(new SongViewModel(song, workoutPlaylist.definition.PlaylistType, _dispatcher));
+            }
             Tracks.CollectionChanged += Tracks_CollectionChanged;
             IsLoading = false;
         }
@@ -118,37 +116,38 @@ namespace BoxVR_Playlist_Manager
 
         public void AddSongCommandExecute(object arg)
         {
-            using(var dlg = new System.Windows.Forms.OpenFileDialog())
+            var dlg = new OpenFileDialog();
+            
+            dlg.CheckFileExists = true;
+            dlg.CheckPathExists = true;
+            dlg.Multiselect = true;
+            dlg.Title = "Add Track";
+
+            //Taken from BOXVR source code.
+            dlg.Filter = "MP3 Files (*.mp3)|*.mp3|M4A Files (*.m4a)|*.m4a|OGG Files (*.ogg)|*.ogg";
+            var result = dlg.ShowDialog();
+
+            if(result ?? false)
             {
-                dlg.AutoUpgradeEnabled = true;
-                dlg.CheckFileExists = true;
-                dlg.CheckPathExists = true;
-                dlg.Multiselect = true;
-                dlg.Title = "Add Track";
-
-                //Taken from BOXVR source code.
-                dlg.Filter = "MP3 Files (*.mp3)|*.mp3|M4A Files (*.m4a)|*.m4a|OGG Files (*.ogg)|*.ogg";
-                var result = dlg.ShowDialog();
-
-                if(result == System.Windows.Forms.DialogResult.OK)
+                foreach(var file in dlg.FileNames)
                 {
-                    foreach(var file in dlg.FileNames)
-                        AddSong(file);
+                    AddSong(file);
                 }
             }
+            
         }
 
         public void AddSong(string fileName)
-        { 
+        {
             //Create a dummy track object with all required properties for display and for later import
-            ATL.Track track = new ATL.Track(fileName);
+            var track = TagLib.File.Create(fileName);
             var songDefinition = new SongDefinition()
             {
                 trackDefinition = new TrackDefinition()
                 {
-                    tagLibArtist = track.Artist,
-                    tagLibTitle = track.Title,
-                    duration = track.Duration,
+                    tagLibArtist = track.Tag.JoinedPerformers,
+                    tagLibTitle = track.Tag.Title,
+                    duration = (float)track.Properties.Duration.TotalSeconds,
                     trackData = new TrackData()
                     {
                         originalFilePath = fileName
@@ -158,45 +157,45 @@ namespace BoxVR_Playlist_Manager
 
             _workoutPlaylist.AddSong(songDefinition);
 
-            Tracks.Add(songDefinition);
+            Tracks.Add(new SongViewModel(songDefinition, PlaylistType.Local, _dispatcher));
         }
 
         public void RemoveSongCommandExecute(object arg)
         {
-            if(arg is SongDefinition song)
+            if(arg is SongViewModel songViewModel)
             {
-                _workoutPlaylist.RemoveSong(song);
-                Tracks.Remove(song);
+                _workoutPlaylist.RemoveSong(songViewModel.SongDefinition);
+                Tracks.Remove(songViewModel);
             }
         }
 
         public void SongMoveUpCommandExecute(object arg)
         {
-            if(arg is SongDefinition song)
+            if(arg is SongViewModel songViewModel)
             {
-                var index = Tracks.IndexOf(song);
+                var index = Tracks.IndexOf(songViewModel);
                 if(index > 0)
                 {
                     var prev = Tracks[index - 1];
-                    Tracks[index - 1] = song;
+                    Tracks[index - 1] = songViewModel;
                     Tracks[index] = prev;
                 }
-                SelectedTrack = song;
+                SelectedTrack = songViewModel;
             }
         } 
         
         public void SongMoveDownCommandExecute(object arg)
         {
-            if(arg is SongDefinition song)
+            if(arg is SongViewModel songViewModel)
             {
-                var index = Tracks.IndexOf(song);
+                var index = Tracks.IndexOf(songViewModel);
                 if(index < Tracks.Count)
                 {
                     var next = Tracks[index + 1];
-                    Tracks[index + 1] = song;
+                    Tracks[index + 1] = songViewModel;
                     Tracks[index] = next;
                 }
-                SelectedTrack = song;
+                SelectedTrack = songViewModel;
             }
         }
 
@@ -205,42 +204,23 @@ namespace BoxVR_Playlist_Manager
             IsGeneratingBeatmaps = true;
             Task.Run(() =>
             {
-                try
+                List<SongDefinition> list = new List<SongDefinition>();
+                foreach(var songViewModel in Tracks)
                 {
-                    List<SongDefinition> list = new List<SongDefinition>();
-                    int i = 1;
-                    foreach(var track in Tracks)
+                    if(!_originalWorkoutPlaylist.songs.Contains(songViewModel.SongDefinition))
                     {
-                        ProcessingTrackName = track.trackDefinition.tagLibTitle;
-                        ProcessingTrackNum = i;
-                        if(!_originalWorkoutPlaylist.songs.Contains(track))
-                        {
-                            var addedSong = PlaylistManager.instance.PlaylistAddEntry(_workoutPlaylist, track.trackDefinition.trackData.originalFilePath, FitXr.Enums.LocationMode.PlayerData);
-                            list.Add(addedSong);
-                        }
-                        else
-                        {
-                            list.Add(track);
-                        }
-                        i++;
+                        var addedSong = PlaylistManager.instance.PlaylistAddEntry(_workoutPlaylist, songViewModel.SongDefinition.trackDefinition.trackData.originalFilePath, FitXr.Enums.LocationMode.PlayerData);
+                        list.Add(addedSong);
                     }
-                    _workoutPlaylist.songs = list;
-                    PlaylistManager.instance.ExportPlaylistJson(_workoutPlaylist);
-                    _dispatcher.Invoke(() =>
+                    else
                     {
-                        Tracks.Clear();
-                        foreach(var song in _workoutPlaylist.songs)
-                        {
-                            Tracks.Add(song);
-                        }
-                        IsGeneratingBeatmaps = false;
-                        IsModified = false;
-                    });
+                        list.Add(songViewModel.SongDefinition);
+                    }
                 }
-                catch(Exception ex)
-                {
-                    MessageBox.Show($"FAILED {ex.Message}");
-                }
+                _workoutPlaylist.songs = list;
+                PlaylistManager.instance.ExportPlaylistJson(_workoutPlaylist);
+                IsGeneratingBeatmaps = false;
+                IsModified = false;
             });
         }
     }
