@@ -170,6 +170,7 @@
                             <DataGridTextColumn Header="Title" Binding="{Binding trackDefinition.tagLibTitle}" Width="200"/>
                             <DataGridTextColumn Header="Artist" Binding="{Binding trackDefinition.tagLibArtist}"  Width="200"/>
                             <DataGridTextColumn Header="Duration" Binding="{Binding trackDefinition.DurationTimeSpan,StringFormat={}{0:mm':'ss}}" />
+                            <DataGridTextColumn Header="BPM" Binding="{Binding trackDefinition.bpm,StringFormat={}{0:F0}}" />
                             <DataGridTemplateColumn>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
