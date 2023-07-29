@@ -1,4 +1,4 @@
-# Note: due to updates to BoxVR/FitXR, this app no longer works. I'm hoping to find a new approach but for now I'm afraid this app will not work for you.
+# Note: due to updates to BoxVR/FitXR, this app no longer works. I'm leaving the code online in case it helps any future dev who might want to attempt to make it compatible.
 
 # BoxVR Playlist Manager
 A Windows based playlist manager for the VR fitness game BoxVR
